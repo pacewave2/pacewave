@@ -3,37 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PaceWave - Admin Dashboard</title>
+<title>PaceWave Admin</title>
 <style>
   :root {
     --bg: #0f172a; --card: #1e293b; --muted: #94a3b8; --text: #e2e8f0;
-    --accent: #3b82f6; --danger: #ef4444; --ok: #22c55e;
+    --accent: #3b82f6; --danger: #ef4444; --ok: #22c55e; --border: #334155;
   }
   [data-theme="light"] {
-    --bg: #f8fafc; --card: #ffffff; --muted: #64748b; --text: #0f172a;
+    --bg: #f8fafc; --card: #ffffff; --muted: #64748b; --text: #0f172a; --border: #e2e8f0;
   }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-  body { background: var(--bg); color: var(--text); transition: 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+  body { background: var(--bg); color: var(--text); transition: 0.2s; }
   .layout { display: flex; min-height: 100vh; }
-  aside { width: 240px; background: var(--card); padding: 20px; border-right: 1px solid #334155; }
-  aside h2 { font-size: 18px; margin-bottom: 20px; color: var(--accent); }
-  aside button { width: 100%; text-align: left; padding: 10px; margin: 4px 0; background: none; border: none; color: var(--text); cursor: pointer; border-radius: 8px; }
-  aside button.active, aside button:hover { background: var(--accent); color: #fff; }
+  aside { width: 260px; background: var(--card); padding: 20px; border-right: 1px solid var(--border); flex-shrink: 0; }
+  aside h2 { font-size: 20px; margin-bottom: 24px; color: var(--accent); }
+  .nav-btn { width: 100%; text-align: left; padding: 10px 12px; margin: 4px 0; background: none; border: none; color: var(--text); cursor: pointer; border-radius: 8px; font-size: 14px; }
+  .nav-btn.active, .nav-btn:hover { background: var(--accent); color: #fff; }
   main { flex: 1; padding: 24px; overflow-y: auto; }
   .section { display: none; }
   .section.active { display: block; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .card { background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid #334155; }
-  .card h3 { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
-  .card h1 { font-size: 28px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; }
+  .card h3 { font-size: 16px; color: var(--muted); margin-bottom: 12px; }
+  .card h1 { font-size: 36px; margin-top: 4px; }
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-  th, td { text-align: left; padding: 10px; border-bottom: 1px solid #334155; font-size: 14px; }
-  input, select, textarea { width: 100%; padding: 8px; margin: 6px 0; background: var(--bg); color: var(--text); border: 1px solid #334155; border-radius: 6px; }
-  .btn { padding: 8px 14px; border: none; border-radius: 8px; cursor: pointer; background: var(--accent); color: #fff; }
+  th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  th { color: var(--muted); font-weight: 500; }
+  input, select, textarea { width: 100%; padding: 10px; margin: 6px 0; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+  .btn { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; background: var(--accent); color: #fff; font-weight: 500; }
   .btn.danger { background: var(--danger); }
   .btn.ok { background: var(--ok); }
-  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .toggle { cursor: pointer; padding: 6px 10px; border: 1px solid #334155; border-radius: 6px; background: var(--card); }
+  .btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 200px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; background: var(--accent); color: #fff; }
+  .chart { height: 200px; background: linear-gradient(90deg, var(--accent) 0%, transparent 100%); opacity: 0.2; border-radius: 8px; display: flex; align-items: end; gap: 8px; padding: 12px; }
+  .bar { flex: 1; background: var(--accent); border-radius: 4px; }
+  .toggle { cursor: pointer; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); }
+  label { font-size: 13px; color: var(--muted); display: block; margin-top: 8px; }
+  @media (max-width: 768px) { aside { width: 200px; } .nav-btn { font-size: 13px; padding: 8px; } }
 </style>
 </head>
 <body data-theme="dark">
@@ -56,46 +65,54 @@
 
   <main>
     <div class="topbar">
-      <h1>Admin Panel</h1>
-      <button class="toggle" onclick="toggleTheme()">Light/Dark</button>
+      <h1>Admin Dashboard</h1>
+      <button class="toggle" id="themeToggle">Light/Dark</button>
     </div>
 
     <!-- 1. Dashboard -->
     <section id="dashboard" class="section active">
       <div class="grid">
-        <div class="card"><h3>Total Books</h3><h1>1,240</h1></div>
-        <div class="card"><h3>Total Categories</h3><h1>18</h1></div>
-        <div class="card"><h3>Total Views/Reads</h3><h1>84,520</h1></div>
+        <div class="card"><h3>Total Books</h3><h1 id="totalBooks">1,240</h1></div>
+        <div class="card"><h3>Total Categories</h3><h1 id="totalCats">18</h1></div>
+        <div class="card"><h3>Total Reads</h3><h1 id="totalReads">84,520</h1></div>
         <div class="card"><h3>Active Users</h3><h1>3,102</h1></div>
       </div>
       <div class="card">
+        <h3>Website Statistics</h3>
+        <p>Daily Visitors: 1,240 | Bounce Rate: 32% | Avg Session: 6m 12s</p>
+      </div>
+      <div class="card">
         <h3>Recently Added Books</h3>
-        <table>
+        <table id="recentBooks">
           <tr><th>Title</th><th>Category</th><th>Added</th></tr>
           <tr><td>The Silent Patient</td><td>Mystery</td><td>2026-04-15</td></tr>
           <tr><td>Atomic Habits</td><td>Educational</td><td>2026-04-14</td></tr>
         </table>
       </div>
-      <div class="card"><h3>Website Statistics</h3><p>Uptime: 99.9% | Avg Load: 1.2s | Bounce Rate: 32%</p></div>
     </section>
 
     <!-- 2. Book Management -->
     <section id="books" class="section">
       <div class="card">
         <h3>Add/Edit Book</h3>
-        <input placeholder="Book Title">
-        <input placeholder="Author">
-        <select><option>Fiction</option><option>Romance</option><option>Mystery</option></select>
-        <input type="file" accept="image/*"> <label>Cover Image</label>
-        <input type="file" accept=".pdf,.epub"> <label>Upload PDF/ePub</label>
-        <label><input type="checkbox"> Set as Featured</label>
-        <button class="btn">Save Book</button>
+        <div class="row">
+          <input id="bookTitle" placeholder="Book Title">
+          <input id="bookAuthor" placeholder="Author">
+        </div>
+        <select id="bookCat">
+          <option>Fiction</option><option>Romance</option><option>Mystery</option>
+          <option>Science Fiction</option><option>Biography</option><option>Educational</option>
+        </select>
+        <label>Cover Image</label><input type="file" id="bookCover" accept="image/*">
+        <label>PDF/ePub File</label><input type="file" id="bookFile" accept=".pdf,.epub">
+        <label><input type="checkbox" id="bookFeatured"> Set as Featured</label>
+        <button class="btn" onclick="addBook()">Save Book</button>
       </div>
       <div class="card">
         <h3>All Books</h3>
-        <table>
-          <tr><th>Title</th><th>Author</th><th>Actions</th></tr>
-          <tr><td>Book One</td><td>Author A</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+        <table id="booksTable">
+          <tr><th>Title</th><th>Author</th><th>Category</th><th>Featured</th><th>Actions</th></tr>
+          <tr><td>Dune</td><td>Frank Herbert</td><td>Science Fiction</td><td>Yes</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
         </table>
       </div>
     </section>
@@ -104,19 +121,21 @@
     <section id="categories" class="section">
       <div class="card">
         <h3>Add Category</h3>
-        <input placeholder="Category Name">
-        <button class="btn">Create</button>
+        <div class="row">
+          <input id="catName" placeholder="Category Name">
+          <button class="btn" onclick="addCategory()">Create</button>
+        </div>
       </div>
       <div class="card">
         <h3>Categories</h3>
-        <table>
+        <table id="catsTable">
           <tr><th>Name</th><th>Actions</th></tr>
-          <tr><td>Fiction</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
-          <tr><td>Romance</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
-          <tr><td>Mystery</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
-          <tr><td>Science Fiction</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
-          <tr><td>Biography</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
-          <tr><td>Educational</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Fiction</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Romance</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Mystery</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Science Fiction</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Biography</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Educational</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>
         </table>
       </div>
     </section>
@@ -125,19 +144,23 @@
     <section id="homepage" class="section">
       <div class="card">
         <h3>Hero Banner</h3>
-        <input placeholder="Banner Title">
-        <textarea placeholder="Banner Subtitle"></textarea>
-        <input type="file"> <button class="btn">Update Banner</button>
+        <input placeholder="Banner Title" value="Read Anywhere, Anytime">
+        <textarea placeholder="Banner Subtitle" rows="3">Thousands of books at your fingertips</textarea>
+        <label>Banner Image</label><input type="file">
+        <button class="btn">Update Banner</button>
       </div>
       <div class="card">
-        <h3>Featured Books & Sections</h3>
-        <select multiple size="4"><option>Book A</option><option>Book B</option></select>
-        <input placeholder="Section Name: Trending Now">
-        <button class="btn">Save Homepage</button>
+        <h3>Featured Books Section</h3>
+        <select multiple size="4">
+          <option selected>Dune</option>
+          <option>The Silent Patient</option>
+          <option>Atomic Habits</option>
+        </select>
+        <button class="btn">Save Selection</button>
       </div>
       <div class="card">
         <h3>Announcements</h3>
-        <textarea placeholder="Update announcements..."></textarea>
+        <textarea rows="3" placeholder="New books added every week!"></textarea>
         <button class="btn">Post</button>
       </div>
     </section>
@@ -146,72 +169,119 @@
     <section id="search" class="section">
       <div class="card">
         <h3>Search Index</h3>
-        <button class="btn">Rebuild Search Index</button>
-        <textarea placeholder="Manage searchable fields: title, author, description..."></textarea>
+        <button class="btn" onclick="alert('Search index rebuilt!')">Rebuild Search Index</button>
+        <p>Last rebuilt: 2026-04-16 09:30</p>
+        <label>Manage searchable fields</label>
+        <label><input type="checkbox" checked> Title</label>
+        <label><input type="checkbox" checked> Author</label>
+        <label><input type="checkbox" checked> Description</label>
       </div>
     </section>
 
     <!-- 6. Reading Analytics -->
     <section id="analytics" class="section">
       <div class="grid">
-        <div class="card"><h3>Most Read Books</h3><p>1. Atomic Habits<br>2. The Silent Patient</p></div>
-        <div class="card"><h3>Most Viewed Categories</h3><p>1. Educational<br>2. Mystery</p></div>
+        <div class="card"><h3>Most Read Books</h3><p>1. Atomic Habits - 12,450 reads<br>2. The Silent Patient - 9,820 reads</p></div>
+        <div class="card"><h3>Most Viewed Categories</h3><p>1. Educational<br>2. Mystery<br>3. Romance</p></div>
       </div>
-      <div class="card"><h3>Daily/Weekly/Monthly Stats</h3><p>Reads Today: 420 | This Week: 3,100 | This Month: 12,450</p></div>
-      <div class="card"><h3>Popular Searches</h3><p>"romance pdf", "free sci-fi", "biography"</p></div>
+      <div class="card">
+        <h3>Daily Reads - Last 7 Days</h3>
+        <div class="chart">
+          <div class="bar" style="height:60%"></div><div class="bar" style="height:80%"></div>
+          <div class="bar" style="height:45%"></div><div class="bar" style="height:90%"></div>
+          <div class="bar" style="height:70%"></div><div class="bar" style="height:100%"></div>
+          <div class="bar" style="height:85%"></div>
+        </div>
+        <p>Weekly: 3,100 | Monthly: 12,450</p>
+      </div>
+      <div class="card">
+        <h3>Popular Searches</h3>
+        <p>"romance books" - 420 searches<br>"free pdf" - 310 searches<br>"mystery novels" - 280 searches</p>
+      </div>
     </section>
 
-    <!-- 7. Website Content -->
+    <!-- 7. Website Content Management -->
     <section id="content" class="section">
-      <div class="card"><h3>About Us</h3><textarea rows="4">Edit About Us page content...</textarea><button class="btn">Save</button></div>
-      <div class="card"><h3>Privacy Policy</h3><textarea rows="4">Edit Privacy Policy...</textarea><button class="btn">Save</button></div>
-      <div class="card"><h3>Terms & Conditions</h3><textarea rows="4">Edit Terms...</textarea><button class="btn">Save</button></div>
-      <div class="card"><h3>Contact Us</h3><input placeholder="Email"><input placeholder="Phone"><button class="btn">Save</button></div>
+      <div class="card">
+        <h3>About Us</h3>
+        <textarea rows="4">PaceWave is your digital library for free and premium books...</textarea>
+        <button class="btn">Save</button>
+      </div>
+      <div class="card">
+        <h3>Privacy Policy</h3>
+        <textarea rows="4">We respect your privacy and protect your data...</textarea>
+        <button class="btn">Save</button>
+      </div>
+      <div class="card">
+        <h3>Terms of Service</h3>
+        <textarea rows="4">By using PaceWave, you agree to our terms...</textarea>
+        <button class="btn">Save</button>
+      </div>
+      <div class="card">
+        <h3>Contact Us</h3>
+        <input placeholder="Email" value="support@pacewave.com">
+        <input placeholder="Phone" value="+254 700 000">
+        <button class="btn">Update</button>
+      </div>
     </section>
 
-    <!-- 8. Advertisement -->
+    <!-- 8. Advertisement Management -->
     <section id="ads" class="section">
       <div class="card">
         <h3>Google AdSense</h3>
-        <textarea placeholder="Paste AdSense code here"></textarea>
-        <input placeholder="Ad Placement: header, sidebar, footer">
-        <button class="btn">Save Ad Settings</button>
+        <textarea rows="3" placeholder="Paste AdSense code here"></textarea>
+        <select><option>Header</option><option>Sidebar</option><option>Footer</option><option>Between Books</option></select>
+        <button class="btn">Save Ad</button>
       </div>
-      <div class="card"><h3>Ad Performance</h3><p>Impressions: 14,200 | CTR: 1.8% | Revenue: $42.30</p></div>
+      <div class="card">
+        <h3>Ad Performance</h3>
+        <p>Impressions: 24,500 | Clicks: 1,240 | CTR: 5.06% | Revenue: $42.30</p>
+      </div>
     </section>
 
-    <!-- 9. Appearance -->
+    <!-- 9. Appearance Settings -->
     <section id="appearance" class="section">
       <div class="card">
         <h3>Branding</h3>
-        <input type="file"> <label>Upload Logo</label>
-        <input type="file"> <label>Upload Favicon</label>
-        <input type="color" value="#3b82f6"> <label>Theme Color</label>
-        <button class="btn">Apply</button>
+        <label>Logo Upload</label><input type="file" accept="image/*">
+        <label>Favicon Upload</label><input type="file" accept="image/*">
+        <label>Theme Color</label><input type="color" value="#3b82f6" id="themeColor">
+        <button class="btn" onclick="document.documentElement.style.setProperty('--accent', document.getElementById('themeColor').value)">Apply</button>
       </div>
     </section>
 
     <!-- 10. Security -->
     <section id="security" class="section">
       <div class="card">
-        <h3>Admin Account</h3>
+        <h3>Change Admin Password</h3>
+        <input type="password" placeholder="Current Password">
         <input type="password" placeholder="New Password">
+        <input type="password" placeholder="Confirm Password">
+        <button class="btn">Update Password</button>
+      </div>
+      <div class="card">
+        <h3>Two-Factor Authentication</h3>
         <label><input type="checkbox"> Enable 2FA</label>
-        <button class="btn">Update</button>
+        <button class="btn">Setup</button>
       </div>
       <div class="card">
         <h3>Login Activity Log</h3>
-        <table><tr><th>Time</th><th>IP</th><th>Status</th></tr>
-        <tr><td>2026-04-16 09:12</td><td>102.213.1.5</td><td>Success</td></tr></table>
+        <table>
+          <tr><th>Time</th><th>IP</th><th>Status</th></tr>
+          <tr><td>2026-04-16 10:12</td><td>197.254.60.12</td><td><span class="badge">Success</span></td></tr>
+          <tr><td>2026-04-16 02:05</td><td>102.134.12.8</td><td><span class="badge" style="background:var(--danger)">Failed</span></td></tr>
+        </table>
       </div>
     </section>
 
     <!-- 11. Backup & Restore -->
     <section id="backup" class="section">
       <div class="card">
-        <button class="btn ok">Export Library Data as JSON</button>
-        <button class="btn">Backup Books + Settings</button>
-        <input type="file"> <button class="btn danger">Restore from Backup</button>
+        <button class="btn ok" onclick="alert('Library data exported as JSON')">Export Library Data</button>
+        <button class="btn" onclick="alert('Full backup created')">Backup Books + Settings</button>
+        <label>Restore from Backup</label>
+        <input type="file" accept=".json,.zip">
+        <button class="btn danger">Restore</button>
       </div>
     </section>
 
@@ -219,9 +289,9 @@
     <section id="settings" class="section">
       <div class="card">
         <input placeholder="Website Name" value="PaceWave">
-        <textarea placeholder="Website Description">Read anywhere, anytime</textarea>
-        <input placeholder="SEO Title">
-        <input placeholder="Meta Description">
+        <textarea placeholder="Website Description" rows="2">Read anywhere, anytime</textarea>
+        <input placeholder="SEO Title" value="PaceWave - Free Online Library">
+        <input placeholder="Meta Description" value="Read thousands of books online for free">
         <input placeholder="Facebook URL">
         <input placeholder="Twitter/X URL">
         <input placeholder="Copyright © 2026 PaceWave">
@@ -232,17 +302,50 @@
 </div>
 
 <script>
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.target).classList.add('active');
-    }
+  // Tab switching
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const sections = document.querySelectorAll('.section');
+  
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      navBtns.forEach(b => b.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById(this.dataset.target).classList.add('active');
+    });
   });
-  function toggleTheme() {
+
+  // Light/Dark mode
+  document.getElementById('themeToggle').addEventListener('click', function() {
     const body = document.body;
     body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+
+  // Mock functions
+  function addBook() {
+    const title = document.getElementById('bookTitle').value;
+    const author = document.getElementById('bookAuthor').value;
+    const cat = document.getElementById('bookCat').value;
+    const featured = document.getElementById('bookFeatured').checked ? 'Yes' : 'No';
+    
+    if (!title || !author) return alert('Fill title and author');
+    
+    const table = document.getElementById('booksTable');
+    table.innerHTML += `<tr><td>${title}</td><td>${author}</td><td>${cat}</td><td>${featured}</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>`;
+    
+    document.getElementById('bookTitle').value = '';
+    document.getElementById('bookAuthor').value = '';
+    alert('Book saved!');
+    document.getElementById('totalBooks').textContent = parseInt(document.getElementById('totalBooks').textContent.replace(',','')) + 1;
+  }
+
+  function addCategory() {
+    const name = document.getElementById('catName').value;
+    if (!name) return alert('Enter category name');
+    const table = document.getElementById('catsTable');
+    table.innerHTML += `<tr><td>${name}</td><td><button class="btn ghost">Edit</button> <button class="btn danger">Delete</button></td></tr>`;
+    document.getElementById('catName').value = '';
+    document.getElementById('totalCats').textContent = parseInt(document.getElementById('totalCats').textContent) + 1;
   }
 </script>
 </body>
