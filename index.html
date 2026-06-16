@@ -292,6 +292,23 @@ window.onload = () => {
   createFloatingBooks();
   observeFade();
   loadTheme();
+  syncDataToAdmin();
+}
+
+// Sync homepage data to localStorage for admin dashboard
+function syncDataToAdmin(){
+  const adminData = {
+    books: books,
+    categories: categories.map((cat, idx) => ({id: idx + 1, name: cat})),
+    stats: {
+      totalBooks: books.length,
+      totalReads: books.reduce((a, b) => a + (b.views || 0), 0),
+      activeUsers: 247
+    }
+  };
+  localStorage.setItem('pacewave_books', JSON.stringify(books));
+  localStorage.setItem('pacewave_cats', JSON.stringify(adminData.categories));
+  localStorage.setItem('pacewave_stats', JSON.stringify(adminData.stats));
 }
 
 function createFloatingBooks(){
