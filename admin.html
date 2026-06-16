@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaceWave - Admin Dashboard</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #1e293b; --muted: #94a3b8; --text: #e2e8f0;
+    --accent: #3b82f6; --danger: #ef4444; --ok: #22c55e;
+  }
+  [data-theme="light"] {
+    --bg: #f8fafc; --card: #ffffff; --muted: #64748b; --text: #0f172a;
+  }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+  body { background: var(--bg); color: var(--text); transition: 0.3s; }
+  .layout { display: flex; min-height: 100vh; }
+  aside { width: 240px; background: var(--card); padding: 20px; border-right: 1px solid #334155; }
+  aside h2 { font-size: 18px; margin-bottom: 20px; color: var(--accent); }
+  aside button { width: 100%; text-align: left; padding: 10px; margin: 4px 0; background: none; border: none; color: var(--text); cursor: pointer; border-radius: 8px; }
+  aside button.active, aside button:hover { background: var(--accent); color: #fff; }
+  main { flex: 1; padding: 24px; overflow-y: auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card { background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid #334155; }
+  .card h3 { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+  .card h1 { font-size: 28px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 10px; border-bottom: 1px solid #334155; font-size: 14px; }
+  input, select, textarea { width: 100%; padding: 8px; margin: 6px 0; background: var(--bg); color: var(--text); border: 1px solid #334155; border-radius: 6px; }
+  .btn { padding: 8px 14px; border: none; border-radius: 8px; cursor: pointer; background: var(--accent); color: #fff; }
+  .btn.danger { background: var(--danger); }
+  .btn.ok { background: var(--ok); }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .toggle { cursor: pointer; padding: 6px 10px; border: 1px solid #334155; border-radius: 6px; background: var(--card); }
+</style>
+</head>
+<body data-theme="dark">
+<div class="layout">
+  <aside>
+    <h2>PaceWave Admin</h2>
+    <button class="nav-btn active" data-target="dashboard">1. Dashboard</button>
+    <button class="nav-btn" data-target="books">2. Book Management</button>
+    <button class="nav-btn" data-target="categories">3. Category Management</button>
+    <button class="nav-btn" data-target="homepage">4. Homepage Management</button>
+    <button class="nav-btn" data-target="search">5. Search Management</button>
+    <button class="nav-btn" data-target="analytics">6. Reading Analytics</button>
+    <button class="nav-btn" data-target="content">7. Website Content</button>
+    <button class="nav-btn" data-target="ads">8. Advertisement</button>
+    <button class="nav-btn" data-target="appearance">9. Appearance</button>
+    <button class="nav-btn" data-target="security">10. Security</button>
+    <button class="nav-btn" data-target="backup">11. Backup & Restore</button>
+    <button class="nav-btn" data-target="settings">12. Settings</button>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <h1>Admin Panel</h1>
+      <button class="toggle" onclick="toggleTheme()">Light/Dark</button>
+    </div>
+
+    <!-- 1. Dashboard -->
+    <section id="dashboard" class="section active">
+      <div class="grid">
+        <div class="card"><h3>Total Books</h3><h1>1,240</h1></div>
+        <div class="card"><h3>Total Categories</h3><h1>18</h1></div>
+        <div class="card"><h3>Total Views/Reads</h3><h1>84,520</h1></div>
+        <div class="card"><h3>Active Users</h3><h1>3,102</h1></div>
+      </div>
+      <div class="card">
+        <h3>Recently Added Books</h3>
+        <table>
+          <tr><th>Title</th><th>Category</th><th>Added</th></tr>
+          <tr><td>The Silent Patient</td><td>Mystery</td><td>2026-04-15</td></tr>
+          <tr><td>Atomic Habits</td><td>Educational</td><td>2026-04-14</td></tr>
+        </table>
+      </div>
+      <div class="card"><h3>Website Statistics</h3><p>Uptime: 99.9% | Avg Load: 1.2s | Bounce Rate: 32%</p></div>
+    </section>
+
+    <!-- 2. Book Management -->
+    <section id="books" class="section">
+      <div class="card">
+        <h3>Add/Edit Book</h3>
+        <input placeholder="Book Title">
+        <input placeholder="Author">
+        <select><option>Fiction</option><option>Romance</option><option>Mystery</option></select>
+        <input type="file" accept="image/*"> <label>Cover Image</label>
+        <input type="file" accept=".pdf,.epub"> <label>Upload PDF/ePub</label>
+        <label><input type="checkbox"> Set as Featured</label>
+        <button class="btn">Save Book</button>
+      </div>
+      <div class="card">
+        <h3>All Books</h3>
+        <table>
+          <tr><th>Title</th><th>Author</th><th>Actions</th></tr>
+          <tr><td>Book One</td><td>Author A</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. Category Management -->
+    <section id="categories" class="section">
+      <div class="card">
+        <h3>Add Category</h3>
+        <input placeholder="Category Name">
+        <button class="btn">Create</button>
+      </div>
+      <div class="card">
+        <h3>Categories</h3>
+        <table>
+          <tr><th>Name</th><th>Actions</th></tr>
+          <tr><td>Fiction</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Romance</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Mystery</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Science Fiction</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Biography</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+          <tr><td>Educational</td><td><button class="btn">Edit</button> <button class="btn danger">Delete</button></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Homepage Management -->
+    <section id="homepage" class="section">
+      <div class="card">
+        <h3>Hero Banner</h3>
+        <input placeholder="Banner Title">
+        <textarea placeholder="Banner Subtitle"></textarea>
+        <input type="file"> <button class="btn">Update Banner</button>
+      </div>
+      <div class="card">
+        <h3>Featured Books & Sections</h3>
+        <select multiple size="4"><option>Book A</option><option>Book B</option></select>
+        <input placeholder="Section Name: Trending Now">
+        <button class="btn">Save Homepage</button>
+      </div>
+      <div class="card">
+        <h3>Announcements</h3>
+        <textarea placeholder="Update announcements..."></textarea>
+        <button class="btn">Post</button>
+      </div>
+    </section>
+
+    <!-- 5. Search Management -->
+    <section id="search" class="section">
+      <div class="card">
+        <h3>Search Index</h3>
+        <button class="btn">Rebuild Search Index</button>
+        <textarea placeholder="Manage searchable fields: title, author, description..."></textarea>
+      </div>
+    </section>
+
+    <!-- 6. Reading Analytics -->
+    <section id="analytics" class="section">
+      <div class="grid">
+        <div class="card"><h3>Most Read Books</h3><p>1. Atomic Habits<br>2. The Silent Patient</p></div>
+        <div class="card"><h3>Most Viewed Categories</h3><p>1. Educational<br>2. Mystery</p></div>
+      </div>
+      <div class="card"><h3>Daily/Weekly/Monthly Stats</h3><p>Reads Today: 420 | This Week: 3,100 | This Month: 12,450</p></div>
+      <div class="card"><h3>Popular Searches</h3><p>"romance pdf", "free sci-fi", "biography"</p></div>
+    </section>
+
+    <!-- 7. Website Content -->
+    <section id="content" class="section">
+      <div class="card"><h3>About Us</h3><textarea rows="4">Edit About Us page content...</textarea><button class="btn">Save</button></div>
+      <div class="card"><h3>Privacy Policy</h3><textarea rows="4">Edit Privacy Policy...</textarea><button class="btn">Save</button></div>
+      <div class="card"><h3>Terms & Conditions</h3><textarea rows="4">Edit Terms...</textarea><button class="btn">Save</button></div>
+      <div class="card"><h3>Contact Us</h3><input placeholder="Email"><input placeholder="Phone"><button class="btn">Save</button></div>
+    </section>
+
+    <!-- 8. Advertisement -->
+    <section id="ads" class="section">
+      <div class="card">
+        <h3>Google AdSense</h3>
+        <textarea placeholder="Paste AdSense code here"></textarea>
+        <input placeholder="Ad Placement: header, sidebar, footer">
+        <button class="btn">Save Ad Settings</button>
+      </div>
+      <div class="card"><h3>Ad Performance</h3><p>Impressions: 14,200 | CTR: 1.8% | Revenue: $42.30</p></div>
+    </section>
+
+    <!-- 9. Appearance -->
+    <section id="appearance" class="section">
+      <div class="card">
+        <h3>Branding</h3>
+        <input type="file"> <label>Upload Logo</label>
+        <input type="file"> <label>Upload Favicon</label>
+        <input type="color" value="#3b82f6"> <label>Theme Color</label>
+        <button class="btn">Apply</button>
+      </div>
+    </section>
+
+    <!-- 10. Security -->
+    <section id="security" class="section">
+      <div class="card">
+        <h3>Admin Account</h3>
+        <input type="password" placeholder="New Password">
+        <label><input type="checkbox"> Enable 2FA</label>
+        <button class="btn">Update</button>
+      </div>
+      <div class="card">
+        <h3>Login Activity Log</h3>
+        <table><tr><th>Time</th><th>IP</th><th>Status</th></tr>
+        <tr><td>2026-04-16 09:12</td><td>102.213.1.5</td><td>Success</td></tr></table>
+      </div>
+    </section>
+
+    <!-- 11. Backup & Restore -->
+    <section id="backup" class="section">
+      <div class="card">
+        <button class="btn ok">Export Library Data as JSON</button>
+        <button class="btn">Backup Books + Settings</button>
+        <input type="file"> <button class="btn danger">Restore from Backup</button>
+      </div>
+    </section>
+
+    <!-- 12. Settings -->
+    <section id="settings" class="section">
+      <div class="card">
+        <input placeholder="Website Name" value="PaceWave">
+        <textarea placeholder="Website Description">Read anywhere, anytime</textarea>
+        <input placeholder="SEO Title">
+        <input placeholder="Meta Description">
+        <input placeholder="Facebook URL">
+        <input placeholder="Twitter/X URL">
+        <input placeholder="Copyright © 2026 PaceWave">
+        <button class="btn">Save Settings</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    }
+  });
+  function toggleTheme() {
+    const body = document.body;
+    body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+</script>
+</body>
+  </html>
